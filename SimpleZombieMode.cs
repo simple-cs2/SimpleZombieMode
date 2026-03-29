@@ -10,7 +10,7 @@ namespace SimpleZombieMode;
 public partial class SimpleZombieMode : BasePlugin, IPluginConfig<MainConfig>
 {
 	public override string ModuleName => "SimpleZombieMode";
-	public override string ModuleVersion => "0.0.1";
+	public override string ModuleVersion => "0.0.2";
 	public override string ModuleAuthor => "t.me/kotyarakryt";
     public override string ModuleDescription => "A simple and clean Zombie Mode for CS2 — infection system, respawn lives, last survivor bonus and more. Built with CounterStrikeSharp.";
 
@@ -36,15 +36,6 @@ public partial class SimpleZombieMode : BasePlugin, IPluginConfig<MainConfig>
 
 		// Listeners -->>
 		RegisterListener<Listeners.OnTick>(() => _interfaceService.OnTick());
-
-		// Commands -->>
-		AddCommand("css_test", "---", (info, command) =>
-		{
-			_roundService.test = !_roundService.test;
-			if(_roundService.test) _roundService.StartRound();
-
-			Server.PrintToChatAll($" {ChatColors.Red}[SZM] {ChatColors.Blue}test {ChatColors.Default} => {(_roundService.test ? $" {ChatColors.Green}TRUE" : $" {ChatColors.Red}FALSE")}");
-		});
 	}
 
 	public void OnConfigParsed(MainConfig cfg)
@@ -54,7 +45,7 @@ public partial class SimpleZombieMode : BasePlugin, IPluginConfig<MainConfig>
 		_roundService = new RoundService(Config, _playerService, AddTimer);
 		_interfaceService = new InterfaceService(Config, () => _roundService.TimeLeft, () => _roundService.Phase, () => Utilities.GetPlayers().Where(p => p.IsValid && p.PawnIsAlive).Count(), AddTimer);
 		_weaponService = new WeaponService(() => _roundService.Phase);
-		
+
 		_interfaceService.StartHud();
 	}
 }
