@@ -37,12 +37,12 @@ jobs:
       - name: Package plugin
         shell: powershell
         run: |
-          Compress-Archive -Path release\* -DestinationPath SKF-${{ github.ref_name }}.zip -Force
+          Compress-Archive -Path release\* -DestinationPath SZM-${{ github.ref_name }}.zip -Force
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref_name }}
-          files: SKF-${{ github.ref_name }}.zip
+          files: SZM-${{ github.ref_name }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
