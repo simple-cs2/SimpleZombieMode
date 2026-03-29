@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.3] - 2026-03-29
+### Removed
+- Unused `GetLives` method from `PlayerService`
+- Unused `_hudTimer` field from `InterfaceService`
+- Unused import in `WeaponService`
+- Debug console log from `Load()`
+
 ## [0.0.2] - 2026-03-29
 ### Removed
 - Debug command "css_test"
