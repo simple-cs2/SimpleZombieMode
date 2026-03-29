@@ -14,7 +14,6 @@ public class InterfaceService
     private readonly Func<RoundPhase> _getRoundPhase;
     private readonly Func<int> _getPlayersCount;
     private readonly Func<float, Action, TimerFlags?, CounterStrikeSharp.API.Modules.Timers.Timer> _addTimer;
-    private CounterStrikeSharp.API.Modules.Timers.Timer? _hudTimer;
     private string _currentHudText = string.Empty;
     private List<CCSPlayerController> _activePlayers = new();
 
@@ -29,7 +28,7 @@ public class InterfaceService
 
     internal void StartHud()
     {
-        _hudTimer = _addTimer(1.0f, () =>
+        _addTimer(1.0f, () =>
         {
             string formattedTime = string.Empty;
 
