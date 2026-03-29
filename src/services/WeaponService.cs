@@ -1,7 +1,6 @@
 // src/services/WeaponService.cs
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Utils;
-using SimpleZombieMode.Configs;
 
 namespace SimpleZombieMode.Services;
 
