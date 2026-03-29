@@ -31,7 +31,6 @@ public class RoundService
     public int TimeLeft { get; private set; } = 0;
     public RoundPhase Phase { get; private set; } = RoundPhase.Ended;
     private CounterStrikeSharp.API.Modules.Timers.Timer? Timer;
-    public bool test { get; set; } = false;
     private bool _lastSurvivorBoosted = false;
 
     public RoundService(MainConfig config, PlayerService playerService, Func<float, Action, TimerFlags?, CounterStrikeSharp.API.Modules.Timers.Timer> addTimer)
