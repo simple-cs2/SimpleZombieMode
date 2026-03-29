@@ -43,11 +43,6 @@ public class PlayerService
     }
 
     // Lives management -->>
-    internal int GetLives(ulong steamId)
-    {
-        return _playerLives.TryGetValue(steamId, out int lives) ? lives : 0;
-    }
-
     internal int RemoveLive(ulong steamId)
     {
         if(_playerLives.TryGetValue(steamId, out int lives)) _playerLives[steamId] = lives - 1;
