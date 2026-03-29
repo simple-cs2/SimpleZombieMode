@@ -1,0 +1,48 @@
+# .github/workflows/release.yml
+name: Build and Release SZM
+
+permissions:
+  contents: write
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore SimpleZombieMode.csproj
+
+      - name: Build project
+        run: dotnet build SimpleZombieMode.csproj --configuration Release --no-restore
+
+      - name: Prepare release folder
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Force -Path release\SimpleZombieMode
+          Copy-Item "bin\Release\net8.0\SimpleZombieMode.dll" "release\SimpleZombieMode\"
+
+      - name: Package plugin
+        shell: powershell
+        run: |
+          Compress-Archive -Path release\* -DestinationPath SKF-${{ github.ref_name }}.zip -Force
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: SKF-${{ github.ref_name }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
