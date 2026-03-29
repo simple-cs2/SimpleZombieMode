@@ -76,10 +76,7 @@ public class RoundService
     internal void StartRound()
     {
         _lastSurvivorBoosted = false;
-        List<CCSPlayerController>? players = null;
-
-        if(test) players = Utilities.GetPlayers().Where(p => p.IsValid && p.PawnIsAlive).ToList();
-        else players = Utilities.GetPlayers().Where(p => p.IsValid && p.PawnIsAlive && !p.IsBot).ToList();
+        List<CCSPlayerController> players = Utilities.GetPlayers().Where(p => p.IsValid && p.PawnIsAlive).ToList();
 
         if(players.Count < _config.MinPlayers)
         {
