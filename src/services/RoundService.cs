@@ -148,6 +148,8 @@ public class RoundService
 
                 pawn.Health = _config.SurvivorHealth;
                 pawn.VelocityModifier = _config.SurvivorSpeed;
+
+                Server.PrintToChatAll($" {ChatColors.Red}[SZM] {ChatColors.Gold}{human.PlayerName} {ChatColors.Default}is the {ChatColors.Lime}last survivor{ChatColors.Default}! Received a bonus!");
             }
         }, null);
     }
