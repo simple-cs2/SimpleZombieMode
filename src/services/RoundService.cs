@@ -113,6 +113,7 @@ public class RoundService
         {
             int lives = _playerService.RemoveLive(victim.SteamID);
             if(lives > 0) _addTimer(_config.ZombieRespawnDelay, () => _playerService.InfectPlayer(victim, null, false), null);
+            else if(lives == 1) victim.PrintToChat($" {ChatColors.Red}[SZM] {ChatColors.Default}Last chance! {ChatColors.Red}1 life {ChatColors.Default}remaining!");
         }
 
         if(victim.Team == CsTeam.CounterTerrorist && killer.Team == CsTeam.Terrorist)
