@@ -98,7 +98,11 @@ public class RoundService
         }
 
         Phase = RoundPhase.Countdown;
-        StartTimer(_config.TimerStartInfection, () => StartInfection());
+        StartTimer(_config.TimerStartInfection, () => StartInfection(), (timeLeft) =>
+        {
+            if(timeLeft <= 5 && timeLeft > 0)
+                Server.PrintToChatAll($" {ChatColors.Red}[SZM] {ChatColors.Default}Infection in {ChatColors.Red}{timeLeft}{ChatColors.Default}...");
+        });
     }
 
     internal void OnPlayerDeath(CCSPlayerController? victim, CCSPlayerController? killer)
@@ -155,7 +159,7 @@ public class RoundService
     }
 
     // Functions -->>
-    private void StartTimer(int seconds, Action callback)
+    private void StartTimer(int seconds, Action callback, Action<int>? OnTick = null)
     {
         Timer?.Kill();
         TimeLeft = seconds;
@@ -163,6 +167,7 @@ public class RoundService
         Timer = _addTimer(1.0f, () =>
         {
             TimeLeft--;
+            OnTick?.Invoke(TimeLeft);
             if(TimeLeft <= 0)
             {
                 StopTimer();
