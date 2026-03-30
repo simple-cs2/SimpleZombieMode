@@ -30,6 +30,7 @@ public class RoundService
     private readonly Func<float, Action, TimerFlags?, CounterStrikeSharp.API.Modules.Timers.Timer> _addTimer;
     public int TimeLeft { get; private set; } = 0;
     public RoundPhase Phase { get; private set; } = RoundPhase.Ended;
+    public string RoundWinners { get; private set; } = string.Empty;
     private CounterStrikeSharp.API.Modules.Timers.Timer? Timer;
     private bool _lastSurvivorBoosted = false;
 
@@ -202,9 +203,14 @@ public class RoundService
         _playerService.ResetLives();
         Server.ExecuteCommand($"mp_restartgame {_config.TimerRestartGame}");
 
-        if(whoWins is GameEnd.HumansWin) Server.PrintToChatAll($" {ChatColors.Red}[SZM] {ChatColors.Lime}Humans win!");
-        else if(whoWins is GameEnd.ZombieWin) Server.PrintToChatAll($" {ChatColors.Red}[SZM] {ChatColors.DarkRed}Zombies win!");
-        else if(whoWins is GameEnd.Canceled) Server.PrintToChatAll($" {ChatColors.Red}[SZM] {ChatColors.Default}The game was cancelled {ChatColors.DarkBlue}due to a lack of players{ChatColors.Default}.");
-        else Server.PrintToChatAll($" {ChatColors.Red}[SZM] {ChatColors.Default}Round ended!");
+        (RoundWinners, string chatColor) = whoWins switch
+        {
+            GameEnd.HumansWin   => ("Humans win!", $"{ChatColors.Lime}"),
+            GameEnd.ZombieWin   => ("Zombies win!", $"{ChatColors.DarkRed}"),
+            GameEnd.Canceled    => ("The game was cancelled due to a lack of players.", $"{ChatColors.Default}"),
+            _                   => ("Round ended!", $"{ChatColors.Default}")
+        };
+
+        Server.PrintToChatAll($" {ChatColors.Red}[SZM] {chatColor}{RoundWinners}");
     }
 }
