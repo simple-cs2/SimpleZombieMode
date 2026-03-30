@@ -41,7 +41,7 @@ public partial class SimpleZombieMode : BasePlugin, IPluginConfig<MainConfig>
 		Config = cfg;
 		_playerService = new PlayerService(Config, () => _roundService.Phase);
 		_roundService = new RoundService(Config, _playerService, AddTimer);
-		_interfaceService = new InterfaceService(Config, () => _roundService.TimeLeft, () => _roundService.Phase, () => Utilities.GetPlayers().Where(p => p.IsValid && p.PawnIsAlive).Count(), AddTimer);
+		_interfaceService = new InterfaceService(Config, () => _roundService.TimeLeft, () => _roundService.Phase, () => Utilities.GetPlayers().Where(p => p.IsValid && p.PawnIsAlive).Count(), () => _roundService.RoundWinners, AddTimer);
 		_weaponService = new WeaponService(() => _roundService.Phase);
 
 		_interfaceService.StartHud();

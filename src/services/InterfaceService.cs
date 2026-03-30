@@ -13,16 +13,18 @@ public class InterfaceService
     private readonly Func<int> _getTimeLeft;
     private readonly Func<RoundPhase> _getRoundPhase;
     private readonly Func<int> _getPlayersCount;
+    private readonly Func<string> _getRoundWinner;
     private readonly Func<float, Action, TimerFlags?, CounterStrikeSharp.API.Modules.Timers.Timer> _addTimer;
     private string _currentHudText = string.Empty;
     private List<CCSPlayerController> _activePlayers = new();
 
-    public InterfaceService(MainConfig config, Func<int> getTimeLeft, Func<RoundPhase> getRoundPhase, Func<int> getPlayersCount, Func<float, Action, TimerFlags?, CounterStrikeSharp.API.Modules.Timers.Timer> addTimer)
+    public InterfaceService(MainConfig config, Func<int> getTimeLeft, Func<RoundPhase> getRoundPhase, Func<int> getPlayersCount, Func<string> getRoundWinner, Func<float, Action, TimerFlags?, CounterStrikeSharp.API.Modules.Timers.Timer> addTimer)
     {
         _config = config;
         _getTimeLeft = getTimeLeft;
         _getRoundPhase = getRoundPhase;
         _getPlayersCount = getPlayersCount;
+        _getRoundWinner = getRoundWinner;
         _addTimer = addTimer;
     }
 
@@ -57,6 +59,10 @@ public class InterfaceService
                     int zombiesAlive = _activePlayers.Count(p => p.Team is CsTeam.Terrorist && p.PawnIsAlive);
 
                     _currentHudText = $"<center>Time left: <b color='orange'>{formattedTime}</b><br><font color='green'>Humans: <b>{humansAlive}/{humans}</b></font> | <font color='red'>Zombies: <b>{zombiesAlive}/{zombies}</b></font></center>";
+                    break;
+
+                case RoundPhase.Ended:
+                    _currentHudText = $"<center>{_getRoundWinner()}</center>";
                     break;
             }
         }, TimerFlags.REPEAT);
