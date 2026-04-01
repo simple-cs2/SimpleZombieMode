@@ -56,10 +56,20 @@ public class InterfaceService
                     break;
 
                 case RoundPhase.Active:
-                    int humans = _activePlayers.Count(p => p.Team is CsTeam.CounterTerrorist);
-                    int humansAlive = _activePlayers.Count(p => p.Team is CsTeam.CounterTerrorist && p.PawnIsAlive);
-                    int zombies = _activePlayers.Count(p => p.Team is CsTeam.Terrorist);
-                    int zombiesAlive = _activePlayers.Count(p => p.Team is CsTeam.Terrorist && p.PawnIsAlive);
+                    int humans = 0, humansAlive = 0, zombies = 0, zombiesAlive = 0;
+                    foreach(var player in _activePlayers.Where(p => p is not null && p.IsValid))
+                    {
+                        if(player.Team is CsTeam.CounterTerrorist)
+                        {
+                            humans++;
+                            if(player.PawnIsAlive) humansAlive++;
+                        }
+                        if(player.Team is CsTeam.Terrorist)
+                        {
+                            zombies++;
+                            if(player.PawnIsAlive) zombiesAlive++;
+                        }
+                    }
 
                     _currentHudText = _localizer["szm.hud.active", formattedTime, humansAlive, humans, zombiesAlive, zombies];
                     break;
