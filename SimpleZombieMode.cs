@@ -45,7 +45,7 @@ public partial class SimpleZombieMode : BasePlugin, IPluginConfig<MainConfig>
 			Config,
 			() => _roundService.TimeLeft,
 			() => _roundService.Phase,
-			() => Utilities.GetPlayers().Where(p => p.IsValid && p.PawnIsAlive).Count(),
+			() => Utilities.GetPlayers().Count(p => p.IsValid && p.PawnIsAlive),
 			() => _roundService.RoundWinners,
 			Localizer,
 			AddTimer
