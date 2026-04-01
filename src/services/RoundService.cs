@@ -34,7 +34,7 @@ public class RoundService
     public int TimeLeft { get; private set; } = 0;
     public RoundPhase Phase { get; private set; } = RoundPhase.Ended;
     public string RoundWinners { get; private set; } = string.Empty;
-    private CounterStrikeSharp.API.Modules.Timers.Timer? Timer;
+    private CounterStrikeSharp.API.Modules.Timers.Timer? _timer;
     private bool _lastSurvivorBoosted = false;
 
     public RoundService(MainConfig config, PlayerService playerService, IStringLocalizer localizer, Func<float, Action, TimerFlags?, CounterStrikeSharp.API.Modules.Timers.Timer> addTimer)
@@ -168,10 +168,10 @@ public class RoundService
     // Functions -->>
     private void StartTimer(int seconds, Action callback, Action<int>? OnTick = null)
     {
-        Timer?.Kill();
+        _timer?.Kill();
         TimeLeft = seconds;
 
-        Timer = _addTimer(1.0f, () =>
+        _timer = _addTimer(1.0f, () =>
         {
             TimeLeft--;
             OnTick?.Invoke(TimeLeft);
@@ -205,7 +205,7 @@ public class RoundService
 
     private void StopTimer()
     {
-        Timer?.Kill();
+        _timer?.Kill();
         TimeLeft = 0;
     }
 
