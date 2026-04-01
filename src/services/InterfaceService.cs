@@ -67,7 +67,7 @@ public class InterfaceService
                             humans++;
                             if(player.PawnIsAlive) humansAlive++;
                         }
-                        if(player.Team is CsTeam.Terrorist)
+                        else if(player.Team is CsTeam.Terrorist)
                         {
                             zombies++;
                             if(player.PawnIsAlive) zombiesAlive++;
