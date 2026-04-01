@@ -82,12 +82,11 @@ public class InterfaceService
     }
 
     internal void OnTick()
-    {
+     {
         if(string.IsNullOrEmpty(_currentHudText)) return;
         // @TODO: If the player opens the menu, we should not display the HUD.
 
-        foreach(CCSPlayerController player in _activePlayers)
-            if(player is not null && player.IsValid)
+        foreach(CCSPlayerController player in _activePlayers.Where(p => p is not null && p.IsValid))
                 player.PrintToCenterHtml(_currentHudText);
     }
 }
