@@ -18,6 +18,8 @@ public class InterfaceService
     private readonly IStringLocalizer _localizer;
     private readonly Func<float, Action, TimerFlags?, CounterStrikeSharp.API.Modules.Timers.Timer> _addTimer;
     private string _currentHudText = string.Empty;
+
+    // Cached every second in StartHud() to avoid calling GetPlayers() on every tick
     private List<CCSPlayerController> _activePlayers = new();
 
     public InterfaceService(MainConfig config, Func<int> getTimeLeft, Func<RoundPhase> getRoundPhase, Func<int> getPlayersCount, Func<string> getRoundWinner, IStringLocalizer localizer, Func<float, Action, TimerFlags?, CounterStrikeSharp.API.Modules.Timers.Timer> addTimer)
