@@ -36,8 +36,9 @@ public class InterfaceService
         _addTimer(1.0f, () =>
         {
             string formattedTime = string.Empty;
+            RoundPhase phase = _getRoundPhase();
 
-            if(_getRoundPhase() is not RoundPhase.Idle)
+            if(phase is not RoundPhase.Idle)
             {
                 TimeSpan time = TimeSpan.FromSeconds(_getTimeLeft());
                 formattedTime = time.TotalMinutes >= 1 ? $"{(int)time.TotalMinutes}:{time.Seconds:D2}" : $"{time.Seconds}";
@@ -45,7 +46,7 @@ public class InterfaceService
 
             _activePlayers = Utilities.GetPlayers().Where(p => p.IsValid).ToList();
 
-            switch(_getRoundPhase())
+            switch(phase)
             {
                 case RoundPhase.Idle:
                     _currentHudText = _localizer["szm.hud.waiting", _getPlayersCount(), _config.MinPlayers];
