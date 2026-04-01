@@ -1,8 +1,10 @@
 // src/services/RoundService.cs
+using System.Text.RegularExpressions;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Timers;
 using CounterStrikeSharp.API.Modules.Utils;
+using Microsoft.Extensions.Localization;
 using SimpleZombieMode.Configs;
 
 namespace SimpleZombieMode.Services;
@@ -27,6 +29,7 @@ public class RoundService
 {
     private readonly MainConfig _config;
     private readonly PlayerService _playerService;
+    private readonly IStringLocalizer _localizer;
     private readonly Func<float, Action, TimerFlags?, CounterStrikeSharp.API.Modules.Timers.Timer> _addTimer;
     public int TimeLeft { get; private set; } = 0;
     public RoundPhase Phase { get; private set; } = RoundPhase.Ended;
@@ -34,10 +37,11 @@ public class RoundService
     private CounterStrikeSharp.API.Modules.Timers.Timer? Timer;
     private bool _lastSurvivorBoosted = false;
 
-    public RoundService(MainConfig config, PlayerService playerService, Func<float, Action, TimerFlags?, CounterStrikeSharp.API.Modules.Timers.Timer> addTimer)
+    public RoundService(MainConfig config, PlayerService playerService, IStringLocalizer localizer, Func<float, Action, TimerFlags?, CounterStrikeSharp.API.Modules.Timers.Timer> addTimer)
     {
         _config = config;
         _playerService = playerService;
+        _localizer = localizer;
         _addTimer = addTimer;
     }
 
@@ -101,7 +105,7 @@ public class RoundService
         StartTimer(_config.TimerStartInfection, () => StartInfection(), (timeLeft) =>
         {
             if(timeLeft <= 5 && timeLeft > 0)
-                Server.PrintToChatAll($" {ChatColors.Red}[SZM] {ChatColors.Default}Infection in {ChatColors.Red}{timeLeft}{ChatColors.Default}...");
+                Server.PrintToChatAll(_localizer["szm.round.infection", _localizer["szm.prefix"], timeLeft]);
         });
     }
 
@@ -113,7 +117,7 @@ public class RoundService
         {
             int lives = _playerService.RemoveLive(victim.SteamID);
             if(lives > 0) _addTimer(_config.ZombieRespawnDelay, () => _playerService.InfectPlayer(victim, null, false), null);
-            else if(lives == 1) victim.PrintToChat($" {ChatColors.Red}[SZM] {ChatColors.Default}Last chance! {ChatColors.Red}1 life {ChatColors.Default}remaining!");
+            else if(lives == 1) victim.PrintToChat(_localizer["szm.zombie.last_life", _localizer["szm.prefix"]]); //victim.PrintToChat($" {ChatColors.Red}[SZM] {ChatColors.Default}Last chance! {ChatColors.Red}1 life {ChatColors.Default}remaining!");
         }
 
         if(victim.Team == CsTeam.CounterTerrorist && killer.Team == CsTeam.Terrorist)
@@ -154,7 +158,7 @@ public class RoundService
                 pawn.Health = _config.SurvivorHealth;
                 pawn.VelocityModifier = _config.SurvivorSpeed;
 
-                Server.PrintToChatAll($" {ChatColors.Red}[SZM] {ChatColors.Gold}{human.PlayerName} {ChatColors.Default}is the {ChatColors.Lime}last survivor{ChatColors.Default}! Received a bonus!");
+                Server.PrintToChatAll(_localizer["szm.round.last_survivor", _localizer["szm.prefix"], human.PlayerName]);
             }
         }, null);
     }
@@ -211,14 +215,15 @@ public class RoundService
         _playerService.ResetLives();
         Server.ExecuteCommand($"mp_restartgame {_config.TimerRestartGame}");
 
-        (RoundWinners, string chatColor) = whoWins switch
+        string key = whoWins switch
         {
-            GameEnd.HumansWin   => ("Humans win!", $"{ChatColors.Lime}"),
-            GameEnd.ZombieWin   => ("Zombies win!", $"{ChatColors.DarkRed}"),
-            GameEnd.Canceled    => ("The game was cancelled due to a lack of players.", $"{ChatColors.Default}"),
-            _                   => ("Round ended!", $"{ChatColors.Default}")
+            GameEnd.HumansWin   => "szm.round.humans_win",
+            GameEnd.ZombieWin   => "szm.round.zombies_win",
+            GameEnd.Canceled    => "szm.round.canceled",
+            _                   => "szm.round.ended"
         };
 
-        Server.PrintToChatAll($" {ChatColors.Red}[SZM] {chatColor}{RoundWinners}");
+        RoundWinners = Regex.Replace(_localizer[key, ""], @"\{[a-z]+\}", "").Trim();
+        Server.PrintToChatAll(_localizer[key, _localizer["szm.prefix"]]);
     }
 }

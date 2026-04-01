@@ -1,0 +1,16 @@
+{
+    "szm.prefix": " {red}[SZM]{default}",
+    "szm.zombie.now": "{0} {gold}{1}{default} is now a {darkred}zombie{default}!",
+    "szm.zombie.infected_by": "{0} {gold}{1}{default} turning into a {darkred}zombie{default}... infected by {gold}{2}{default}!",
+    "szm.zombie.last_life": "{0} Last chance! {red}1 life{default} remaining!",
+    "szm.round.humans_win": "{0} {lime}Humans win!",
+    "szm.round.zombies_win": "{0} {darkred}Zombies win!",
+    "szm.round.canceled": "{0} The game was cancelled {darkblue}due to a lack of players{default}.",
+    "szm.round.ended": "{0} Round ended!",
+    "szm.round.infection": "{0} Infection in {red}{1}{default}...",
+    "szm.round.last_survivor": "{0} {gold}{1}{default} is the {lime}last survivor{default}! Received a bonus!",
+    "szm.hud.waiting": "Waiting for players... <b>{0}/{1}</b>",
+    "szm.hud.countdown": "Started infection within <b color='red'>{0}</b>",
+    "szm.hud.active": "Time left: <b color='orange'>{0}</b><br><font color='green'>Humans: <b>{1}/{2}</b></font> | <font color='red'>Zombies: <b>{3}/{4}</b></font>",
+    "szm.hud.ended": "{0}"
+}

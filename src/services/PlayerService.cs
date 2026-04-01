@@ -2,6 +2,7 @@
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Utils;
+using Microsoft.Extensions.Localization;
 using SimpleZombieMode.Configs;
 
 namespace SimpleZombieMode.Services;
@@ -11,11 +12,13 @@ public class PlayerService
     private Dictionary<ulong, int> _playerLives = new();
     private readonly MainConfig _config;
     private readonly Func<RoundPhase> _getRoundPhase;
+    private readonly IStringLocalizer _localizer;
 
-    public PlayerService(MainConfig config, Func<RoundPhase> getRoundPhase)
+    public PlayerService(MainConfig config, Func<RoundPhase> getRoundPhase, IStringLocalizer localizer)
     {
         _config = config;
         _getRoundPhase = getRoundPhase;
+        _localizer = localizer;
     }
 
     // Zombie management -->>
@@ -27,8 +30,8 @@ public class PlayerService
         {
             player.ChangeTeam(CsTeam.Terrorist);
             _playerLives[player.SteamID] = _config.ZombieLives;
-            if(infectedBy is null) Server.PrintToChatAll($" {ChatColors.Red}[SZM] {ChatColors.Gold}{player.PlayerName} {ChatColors.Default}is now a {ChatColors.DarkRed}zombie{ChatColors.Default}!");
-            else Server.PrintToChatAll($" {ChatColors.Red}[SZM] {ChatColors.Gold}{player.PlayerName} {ChatColors.Default}turning into a {ChatColors.DarkRed}zombie{ChatColors.Default}... infected by {ChatColors.Gold}{infectedBy.PlayerName}{ChatColors.Default}!");
+            if(infectedBy is null) Server.PrintToChatAll(_localizer["szm.zombie.now", _localizer["szm.prefix"], player.PlayerName]);
+            else Server.PrintToChatAll(_localizer["szm.zombie.infected_by", _localizer["szm.prefix"], player.PlayerName, infectedBy.PlayerName]);
         }
 
         player.Respawn();

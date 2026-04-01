@@ -1,7 +1,7 @@
 ﻿// SimpleZombieMode.cs
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
-using CounterStrikeSharp.API.Modules.Utils;
+using Microsoft.Extensions.Localization;
 using SimpleZombieMode.Configs;
 using SimpleZombieMode.Services;
 
@@ -39,11 +39,24 @@ public partial class SimpleZombieMode : BasePlugin, IPluginConfig<MainConfig>
 	public void OnConfigParsed(MainConfig cfg)
 	{
 		Config = cfg;
-		_playerService = new PlayerService(Config, () => _roundService.Phase);
-		_roundService = new RoundService(Config, _playerService, AddTimer);
-		_interfaceService = new InterfaceService(Config, () => _roundService.TimeLeft, () => _roundService.Phase, () => Utilities.GetPlayers().Where(p => p.IsValid && p.PawnIsAlive).Count(), () => _roundService.RoundWinners, AddTimer);
+		_playerService = new PlayerService(Config, () => _roundService.Phase, Localizer);
+		_roundService = new RoundService(Config, _playerService, Localizer, AddTimer);
+		_interfaceService = new InterfaceService(
+			Config,
+			() => _roundService.TimeLeft,
+			() => _roundService.Phase,
+			() => Utilities.GetPlayers().Where(p => p.IsValid && p.PawnIsAlive).Count(),
+			() => _roundService.RoundWinners,
+			Localizer,
+			AddTimer
+		);
 		_weaponService = new WeaponService(() => _roundService.Phase);
 
 		_interfaceService.StartHud();
+	}
+
+	public SimpleZombieMode(IStringLocalizer localizer)
+	{
+		Localizer = localizer;
 	}
 }

@@ -3,6 +3,7 @@ using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Timers;
 using CounterStrikeSharp.API.Modules.Utils;
+using Microsoft.Extensions.Localization;
 using SimpleZombieMode.Configs;
 
 namespace SimpleZombieMode.Services;
@@ -14,17 +15,19 @@ public class InterfaceService
     private readonly Func<RoundPhase> _getRoundPhase;
     private readonly Func<int> _getPlayersCount;
     private readonly Func<string> _getRoundWinner;
+    private readonly IStringLocalizer _localizer;
     private readonly Func<float, Action, TimerFlags?, CounterStrikeSharp.API.Modules.Timers.Timer> _addTimer;
     private string _currentHudText = string.Empty;
     private List<CCSPlayerController> _activePlayers = new();
 
-    public InterfaceService(MainConfig config, Func<int> getTimeLeft, Func<RoundPhase> getRoundPhase, Func<int> getPlayersCount, Func<string> getRoundWinner, Func<float, Action, TimerFlags?, CounterStrikeSharp.API.Modules.Timers.Timer> addTimer)
+    public InterfaceService(MainConfig config, Func<int> getTimeLeft, Func<RoundPhase> getRoundPhase, Func<int> getPlayersCount, Func<string> getRoundWinner, IStringLocalizer localizer, Func<float, Action, TimerFlags?, CounterStrikeSharp.API.Modules.Timers.Timer> addTimer)
     {
         _config = config;
         _getTimeLeft = getTimeLeft;
         _getRoundPhase = getRoundPhase;
         _getPlayersCount = getPlayersCount;
         _getRoundWinner = getRoundWinner;
+        _localizer = localizer;
         _addTimer = addTimer;
     }
 
@@ -45,11 +48,11 @@ public class InterfaceService
             switch(_getRoundPhase())
             {
                 case RoundPhase.Idle:
-                    _currentHudText = $"<center>Waiting for players... <b>{_getPlayersCount()}/{_config.MinPlayers}</b></center>";
+                    _currentHudText = _localizer["szm.hud.waiting", _getPlayersCount(), _config.MinPlayers];
                     break;
 
                 case RoundPhase.Countdown:
-                    _currentHudText = $"<center>Started infection within <b color='red'>{formattedTime}</b></center>";
+                    _currentHudText = _localizer["szm.hud.countdown", formattedTime];
                     break;
 
                 case RoundPhase.Active:
@@ -58,11 +61,11 @@ public class InterfaceService
                     int zombies = _activePlayers.Count(p => p.Team is CsTeam.Terrorist);
                     int zombiesAlive = _activePlayers.Count(p => p.Team is CsTeam.Terrorist && p.PawnIsAlive);
 
-                    _currentHudText = $"<center>Time left: <b color='orange'>{formattedTime}</b><br><font color='green'>Humans: <b>{humansAlive}/{humans}</b></font> | <font color='red'>Zombies: <b>{zombiesAlive}/{zombies}</b></font></center>";
+                    _currentHudText = _localizer["szm.hud.active", formattedTime, humansAlive, humans, zombiesAlive, zombies];
                     break;
 
                 case RoundPhase.Ended:
-                    _currentHudText = $"<center>{_getRoundWinner()}</center>";
+                    _currentHudText = _localizer["szm.hud.ended", _getRoundWinner()];
                     break;
             }
         }, TimerFlags.REPEAT);
