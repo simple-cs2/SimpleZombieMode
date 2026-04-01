@@ -95,7 +95,9 @@ public class RoundService
             {
                 player.Respawn();
 
-                CCSPlayerPawn pawn = player.PlayerPawn.Value!;
+                if(player.PlayerPawn.Value is not CCSPlayerPawn pawn)
+                    return;
+
                 pawn.Health = _config.HumanHealth;
                 pawn.VelocityModifier = _config.HumanSpeed;
             }, null);
