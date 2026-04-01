@@ -1,5 +1,7 @@
 # .github/workflows/build.yml
 name: Build CI
+permissions:
+  contents: read
 
 on:
   pull_request:
