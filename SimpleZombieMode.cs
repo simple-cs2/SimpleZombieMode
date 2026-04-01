@@ -10,7 +10,7 @@ namespace SimpleZombieMode;
 public partial class SimpleZombieMode : BasePlugin, IPluginConfig<MainConfig>
 {
 	public override string ModuleName => "SimpleZombieMode";
-	public override string ModuleVersion => "0.0.3";
+	public override string ModuleVersion => "0.0.4";
 	public override string ModuleAuthor => "t.me/kotyarakryt";
     public override string ModuleDescription => "A simple and clean Zombie Mode for CS2 — infection system, respawn lives, last survivor bonus and more. Built with CounterStrikeSharp.";
 
