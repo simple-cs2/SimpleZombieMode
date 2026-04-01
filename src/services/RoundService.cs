@@ -115,7 +115,7 @@ public class RoundService
 
         if(victim.Team is CsTeam.Terrorist)
         {
-            int lives = _playerService.RemoveLive(victim.SteamID);
+            int lives = _playerService.RemoveLife(victim.SteamID);
             if(lives > 0) _addTimer(_config.ZombieRespawnDelay, () => _playerService.InfectPlayer(victim, null, false), null);
             else if(lives == 1) victim.PrintToChat(_localizer["szm.zombie.last_life", _localizer["szm.prefix"]]); //victim.PrintToChat($" {ChatColors.Red}[SZM] {ChatColors.Default}Last chance! {ChatColors.Red}1 life {ChatColors.Default}remaining!");
         }
