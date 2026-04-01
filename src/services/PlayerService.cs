@@ -22,11 +22,11 @@ public class PlayerService
     }
 
     // Zombie management -->>
-    internal void InfectPlayer(CCSPlayerController player, CCSPlayerController? infectedBy, bool IsInitialize = true)
+    internal void InfectPlayer(CCSPlayerController player, CCSPlayerController? infectedBy, bool isInitialize = true)
     {
         if(player is null || !player.IsValid) return;
 
-        if(IsInitialize)
+        if(isInitialize)
         {
             player.ChangeTeam(CsTeam.Terrorist);
             _playerLives[player.SteamID] = _config.ZombieLives;
