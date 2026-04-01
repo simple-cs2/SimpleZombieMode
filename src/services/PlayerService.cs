@@ -50,9 +50,7 @@ public class PlayerService
     // Lives management -->>
     internal int RemoveLife(ulong steamId)
     {
-        if(_playerLives.TryGetValue(steamId, out int lives)) _playerLives[steamId] = lives - 1;
-        else _playerLives[steamId] = 0;
-
+        _playerLives[steamId] = Math.Max(_playerLives.GetValueOrDefault(steamId, 0) - 1, 0);
         return _playerLives[steamId];
     }
     
