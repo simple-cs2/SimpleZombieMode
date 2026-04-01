@@ -8,7 +8,7 @@ namespace SimpleZombieMode.Services;
 
 public class PlayerService
 {
-    private Dictionary<ulong, int> _playerLives = new();
+    private readonly Dictionary<ulong, int> _playerLives = new();
     private readonly MainConfig _config;
     private readonly Func<RoundPhase> _getRoundPhase;
 
