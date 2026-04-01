@@ -33,6 +33,7 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force -Path release\SimpleZombieMode
           Copy-Item "bin\Release\net8.0\SimpleZombieMode.dll" "release\SimpleZombieMode\"
+          Copy-Item -Recurse "lang" "release\SimpleZombieMode\lang"
 
       - name: Package plugin
         shell: powershell
