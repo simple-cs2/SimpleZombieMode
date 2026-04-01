@@ -37,7 +37,9 @@ public class PlayerService
         player.Respawn();
 
         // modify player health and speed
-        CCSPlayerPawn pawn = player.PlayerPawn.Value!;
+        if(player.PlayerPawn.Value is not CCSPlayerPawn pawn)
+            return;
+
         pawn.Health = _config.ZombieHealth;
         pawn.VelocityModifier = _config.ZombieSpeed;
 
