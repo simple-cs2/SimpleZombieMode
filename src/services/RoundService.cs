@@ -152,7 +152,7 @@ public class RoundService
             {
                 _lastSurvivorBoosted = true;
 
-                CCSPlayerController? human = Utilities.GetPlayers().Where(p => p.IsValid && p.PawnIsAlive).FirstOrDefault(p => p.Team == CsTeam.CounterTerrorist);
+                CCSPlayerController? human = players.Where(p => p.IsValid && p.PawnIsAlive).FirstOrDefault(p => p.Team == CsTeam.CounterTerrorist);
                 CCSPlayerPawn? pawn = human?.PlayerPawn.Value;
 
                 if(human is null || pawn is null) return;
